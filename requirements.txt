@@ -1,0 +1,4 @@
+Flask
+requests
+zxcvbn
+python-dotenv

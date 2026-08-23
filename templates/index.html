@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Password Security Center</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, Arial, sans-serif;
+            background:
+                radial-gradient(
+                    circle at top right,
+                    #312e81 0,
+                    transparent 35%
+                ),
+                #090d18;
+            color: #eef2ff;
+            min-height: 100vh;
+        }
+
+        /* ================= HEADER ================= */
+
+        header {
+            padding: 55px 7%;
+            border-bottom: 1px solid #20283a;
+            background: rgba(9, 13, 24, 0.9);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 7px 14px;
+            border-radius: 999px;
+            background: #1e1b4b;
+            color: #a5b4fc;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 44px;
+            line-height: 1.1;
+        }
+
+        header h1 span {
+            color: #8b5cf6;
+        }
+
+        header p {
+            max-width: 760px;
+            color: #9ca3b8;
+            font-size: 17px;
+            line-height: 1.7;
+            margin-top: 16px;
+        }
+
+        /* ================= MAIN ================= */
+
+        .container {
+            width: min(1200px, 92%);
+            margin: 40px auto;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(320px, 1fr)
+            );
+            gap: 24px;
+        }
+
+        .card {
+            background: rgba(17, 24, 39, 0.92);
+            border: 1px solid #273149;
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow:
+                0 12px 35px rgba(0, 0, 0, 0.22);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 23px;
+        }
+
+        .subtitle {
+            color: #8f9bb3;
+            margin-bottom: 22px;
+            line-height: 1.5;
+        }
+
+        /* ================= INPUTS ================= */
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #b9c2d6;
+            font-weight: bold;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 48px 14px 14px;
+            border-radius: 10px;
+            border: 1px solid #33405c;
+            background: #0f1524;
+            color: white;
+            outline: none;
+            font-size: 15px;
+        }
+
+        input:focus {
+            border-color: #8b5cf6;
+            box-shadow:
+                0 0 0 3px
+                rgba(139, 92, 246, 0.15);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 5px;
+            margin: 0;
+        }
+
+        /* ================= BUTTONS ================= */
+
+        button {
+            border: none;
+            border-radius: 10px;
+            padding: 13px 18px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        .primary-btn {
+            width: 100%;
+            margin-top: 14px;
+            background: linear-gradient(
+                135deg,
+                #7c3aed,
+                #4f46e5
+            );
+            color: white;
+        }
+
+        .secondary-btn {
+            background: #1f2937;
+            color: #e5e7eb;
+            border: 1px solid #33405c;
+        }
+
+        .generate-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .generate-row input {
+            padding-right: 14px;
+            max-width: 130px;
+        }
+
+        /* ================= RESULT ================= */
+
+        .result {
+            margin-top: 20px;
+            padding: 18px;
+            border-radius: 12px;
+            background: #0b1120;
+            border: 1px solid #273149;
+            min-height: 80px;
+        }
+
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .score-value {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .score-label {
+            color: #a5b4fc;
+            font-weight: bold;
+        }
+
+        .meter {
+            height: 9px;
+            background: #1f2937;
+            border-radius: 999px;
+            overflow: hidden;
+            margin: 12px 0 18px;
+        }
+
+        .meter-fill {
+            height: 100%;
+            width: 0;
+            border-radius: 999px;
+            transition: 0.35s ease;
+        }
+
+        .breach-box {
+            padding: 14px;
+            border-radius: 10px;
+            margin-top: 14px;
+            line-height: 1.5;
+        }
+
+        .danger {
+            background: #3f1518;
+            border: 1px solid #7f1d1d;
+            color: #fecaca;
+        }
+
+        .safe {
+            background: #0d2a1b;
+            border: 1px solid #166534;
+            color: #bbf7d0;
+        }
+
+        .warning {
+            background: #33260c;
+            border: 1px solid #854d0e;
+            color: #fde68a;
+        }
+
+        /* ================= GENERATOR ================= */
+
+        .generated {
+            font-family: Consolas, monospace;
+            font-size: 16px;
+            color: #c4b5fd;
+            word-break: break-all;
+            background: #090d18;
+            border: 1px dashed #4c1d95;
+        }
+
+        /* ================= EMAIL ================= */
+
+        .notice {
+            font-size: 13px;
+            color: #8f9bb3;
+            margin-top: 12px;
+            line-height: 1.5;
+        }
+
+        /* ================= FEATURES ================= */
+
+        .feature-card {
+            margin-top: 24px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+        }
+
+        .feature {
+            padding: 18px;
+            border-radius: 12px;
+            background: #0d1322;
+            border: 1px solid #253047;
+        }
+
+        .feature strong {
+            display: block;
+            margin-bottom: 6px;
+            color: #c4b5fd;
+        }
+
+        .feature span {
+            color: #8f9bb3;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            text-align: center;
+            padding: 35px 20px;
+            color: #6f7b91;
+            font-size: 13px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 700px) {
+
+            header {
+                padding: 40px 6%;
+            }
+
+            header h1 {
+                font-size: 33px;
+            }
+
+            .container {
+                width: 94%;
+            }
+
+            .generate-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .generate-row input {
+                max-width: none;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="header-content">
+
+        <div class="badge">
+            🔐 CYBERSECURITY TOOL
+        </div>
+
+        <h1>
+            Password <span>Security Center</span>
+        </h1>
+
+        <p>
+            Evaluate password strength, check whether a password
+            appears in known breach data, inspect email exposure,
+            and generate strong credentials from one secure dashboard.
+        </p>
+
+    </div>
+
+</header>
+
+
+<div class="container">
+
+
+    <div class="grid">
+
+
+        <!-- PASSWORD CHECK -->
+
+        <section class="card">
+
+            <h2>🔎 Password Security</h2>
+
+            <p class="subtitle">
+                Analyze password strength and check for known
+                password-breach exposure.
+            </p>
+
+
+            <label for="password">
+                Password
+            </label>
+
+            <div class="input-wrapper">
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter a password"
+                    autocomplete="off"
+                >
+
+                <button
+                    type="button"
+                    class="toggle-password"
+                    onclick="togglePassword()"
+                >
+                    👁
+                </button>
+
+            </div>
+
+
+            <button
+                class="primary-btn"
+                onclick="checkPassword()"
+            >
+                Analyze Password
+            </button>
+
+
+            <div
+                id="passwordResult"
+                class="result"
+            >
+                Your password analysis will appear here.
+            </div>
+
+        </section>
+
+
+        <!-- EMAIL CHECK -->
+
+        <section class="card">
+
+            <h2>📧 Email Breach Check</h2>
+
+            <p class="subtitle">
+                Check whether an email address appears in
+                known HIBP breach records.
+            </p>
+
+
+            <label for="email">
+                Email Address
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="name@example.com"
+            >
+
+
+            <button
+                class="primary-btn"
+                onclick="checkEmail()"
+            >
+                Check Email
+            </button>
+
+
+            <div
+                id="emailResult"
+                class="result"
+            >
+                Email breach results will appear here.
+            </div>
+
+
+            <div class="notice">
+                Email breach lookup requires an active
+                HIBP API subscription.
+            </div>
+
+        </section>
+
+
+    </div>
+
+
+    <!-- GENERATOR -->
+
+    <section class="card feature-card">
+
+        <h2>🛡 Secure Password Generator</h2>
+
+        <p class="subtitle">
+            Generate a cryptographically strong password
+            using Python's secure random generator.
+        </p>
+
+
+        <div class="generate-row">
+
+            <input
+                type="number"
+                id="length"
+                min="12"
+                max="64"
+                value="20"
+            >
+
+            <button
+                class="secondary-btn"
+                onclick="generatePassword()"
+            >
+                Generate Secure Password
+            </button>
+
+            <button
+                class="secondary-btn"
+                onclick="copyPassword()"
+            >
+                Copy
+            </button>
+
+        </div>
+
+
+        <div
+            id="generatedPassword"
+            class="result generated"
+        >
+            Your generated password will appear here.
+        </div>
+
+    </section>
+
+
+    <!-- FEATURES -->
+
+    <section class="card feature-card">
+
+        <h2>Security Features</h2>
+
+        <div class="features">
+
+            <div class="feature">
+                <strong>Entropy Analysis</strong>
+                <span>
+                    Estimates password strength and
+                    resistance to guessing attacks.
+                </span>
+            </div>
+
+            <div class="feature">
+                <strong>k-Anonymity</strong>
+                <span>
+                    Password breach checking sends only
+                    the first five SHA-1 hash characters.
+                </span>
+            </div>
+
+            <div class="feature">
+                <strong>Breach Detection</strong>
+                <span>
+                    Identifies passwords found in known
+                    compromised password datasets.
+                </span>
+            </div>
+
+            <div class="feature">
+                <strong>Secure Generation</strong>
+                <span>
+                    Creates high-entropy passwords using
+                    a cryptographically secure generator.
+                </span>
+            </div>
+
+        </div>
+
+    </section>
+
+
+</div>
+
+
+<footer>
+
+    ProStackHub Password Strength & Breach Checker
+    <br>
+    Use only with passwords and accounts you are authorized to test.
+
+</footer>
+
+
+<script>
+
+
+function togglePassword() {
+
+    const input =
+        document.getElementById("password");
+
+    input.type =
+        input.type === "password"
+            ? "text"
+            : "password";
+
+}
+
+
+async function checkPassword() {
+
+    const password =
+        document.getElementById(
+            "password"
+        ).value;
+
+    const result =
+        document.getElementById(
+            "passwordResult"
+        );
+
+
+    if (!password) {
+
+        result.innerHTML =
+            `<div class="warning">
+                Please enter a password.
+             </div>`;
+
+        return;
+    }
+
+
+    result.innerHTML =
+        "Analyzing password security...";
+
+
+    const formData =
+        new FormData();
+
+    formData.append(
+        "password",
+        password
+    );
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/check-password",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (data.error) {
+
+            result.innerHTML =
+                `<div class="danger">
+                    ${data.error}
+                 </div>`;
+
+            return;
+        }
+
+
+        const strength =
+            data.strength;
+
+        const breach =
+            data.breach;
+
+
+        const percentage =
+            (strength.score / 4) * 100;
+
+
+        let html = `
+
+            <div class="score-row">
+
+                <div>
+                    <div class="score-value">
+                        ${strength.score}/4
+                    </div>
+
+                    <div class="score-label">
+                        ${strength.label}
+                    </div>
+                </div>
+
+                <div>
+                    Crack Time
+                    <br>
+                    <strong>
+                        ${strength.crack_time}
+                    </strong>
+                </div>
+
+            </div>
+
+            <div class="meter">
+
+                <div
+                    class="meter-fill"
+                    style="width:${percentage}%"
+                ></div>
+
+            </div>
+        `;
+
+
+        if (strength.warning) {
+
+            html += `
+                <div class="warning breach-box">
+                    ⚠️ ${strength.warning}
+                </div>
+            `;
+
+        }
+
+
+        if (
+            strength.suggestions &&
+            strength.suggestions.length
+        ) {
+
+            html += `
+                <h3>Improvement Suggestions</h3>
+                <ul>
+            `;
+
+
+            strength.suggestions.forEach(
+                suggestion => {
+
+                    html += `
+                        <li>
+                            ${suggestion}
+                        </li>
+                    `;
+                }
+            );
+
+
+            html += "</ul>";
+
+        }
+
+
+        if (breach.breached) {
+
+            html += `
+
+                <div class="danger breach-box">
+
+                    ⚠️ Password Breach Detected
+
+                    <br><br>
+
+                    This password has appeared
+                    in known breach data.
+
+                    <br>
+
+                    Reported occurrences:
+                    <strong>
+                        ${breach.count}
+                    </strong>
+
+                </div>
+
+            `;
+
+        } else {
+
+            html += `
+
+                <div class="safe breach-box">
+
+                    ✅ No matching password breach
+                    was found in the HIBP Pwned Passwords dataset.
+
+                </div>
+
+            `;
+
+        }
+
+
+        result.innerHTML = html;
+
+
+    } catch (error) {
+
+        result.innerHTML =
+            `<div class="danger">
+                Unable to complete password analysis.
+             </div>`;
+
+    }
+
+}
+
+
+async function checkEmail() {
+
+    const email =
+        document.getElementById(
+            "email"
+        ).value;
+
+    const result =
+        document.getElementById(
+            "emailResult"
+        );
+
+
+    if (!email) {
+
+        result.innerHTML =
+            `<div class="warning">
+                Please enter an email address.
+             </div>`;
+
+        return;
+    }
+
+
+    result.innerHTML =
+        "Checking breach records...";
+
+
+    const formData =
+        new FormData();
+
+    formData.append(
+        "email",
+        email
+    );
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/check-email",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (data.error) {
+
+            result.innerHTML =
+                `<div class="warning breach-box">
+                    ${data.error}
+                 </div>`;
+
+            return;
+        }
+
+
+        if (data.breached) {
+
+            result.innerHTML = `
+
+                <div class="danger breach-box">
+
+                    ⚠️ Email Found in Breaches
+
+                    <br><br>
+
+                    ${data.breaches.length}
+                    breach records found.
+
+                    <ul>
+
+                        ${
+                            data.breaches
+                                .map(
+                                    breach =>
+                                        `<li>
+                                            ${breach.title}
+                                            (${breach.date})
+                                         </li>`
+                                )
+                                .join("")
+                        }
+
+                    </ul>
+
+                </div>
+
+            `;
+
+        } else {
+
+            result.innerHTML = `
+
+                <div class="safe breach-box">
+
+                    ✅ No public HIBP breach match found.
+
+                </div>
+
+            `;
+
+        }
+
+
+    } catch (error) {
+
+        result.innerHTML =
+
+            `<div class="danger breach-box">
+                Unable to complete email lookup.
+             </div>`;
+
+    }
+
+}
+
+
+async function generatePassword() {
+
+    const length =
+        document.getElementById(
+            "length"
+        ).value;
+
+    const result =
+        document.getElementById(
+            "generatedPassword"
+        );
+
+
+    result.innerText =
+        "Generating secure password...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                `/generate-password?length=${length}`
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (data.error) {
+
+            result.innerText =
+                data.error;
+
+            return;
+        }
+
+
+        result.innerText =
+            data.password;
+
+
+    } catch (error) {
+
+        result.innerText =
+            "Unable to generate password.";
+
+    }
+
+}
+
+
+async function copyPassword() {
+
+    const password =
+        document.getElementById(
+            "generatedPassword"
+        ).innerText;
+
+
+    if (
+        !password ||
+        password.includes("appear here") ||
+        password.includes("Generating")
+    ) {
+        return;
+    }
+
+
+    try {
+
+        await navigator.clipboard.writeText(
+            password
+        );
+
+        alert(
+            "Password copied to clipboard."
+        );
+
+    } catch (error) {
+
+        alert(
+            "Unable to copy password."
+        );
+
+    }
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
